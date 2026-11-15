@@ -35,6 +35,12 @@ A new section needs a line in `categories.json` first.
 
 Then commit and push. A push runs the check (GitHub Actions) and Cloudflare Pages republishes.
 
+## Publishing with GitHub Pages (while the repo is public)
+
+Repo **Settings → Pages → Source: GitHub Actions**. Every push to `main` then publishes to
+`https://micksee84.github.io/sb-line-library/` (gallery at that address, catalogue at `/catalog.json`).
+GitHub Pages needs a public repo on the free plan; switch to Cloudflare Pages below if you make it private.
+
 ## Publishing (Cloudflare Pages, one-time setup)
 
 1. Cloudflare dashboard → **Workers & Pages → Create → Pages → Connect to Git** → pick `SB-Line-Library`.
