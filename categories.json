@@ -1,0 +1,23 @@
+{
+  "farm":       { "label": "Farm",                        "order": 1,  "prefixes": ["01-farm"] },
+  "wild":       { "label": "Wild animals",                "order": 2,  "prefixes": ["02-wild"] },
+  "pets":       { "label": "Pets and woodland",           "order": 3,  "prefixes": ["03-pets"] },
+  "ocean":      { "label": "Ocean",                       "order": 4,  "prefixes": ["04-ocean"] },
+  "garden":     { "label": "Garden, nature and weather",  "order": 5,  "prefixes": ["05-garden"] },
+  "food":       { "label": "Food",                        "order": 6,  "prefixes": ["06-food"] },
+  "home":       { "label": "Home",                        "order": 7,  "prefixes": ["07-home"] },
+  "clothes":    { "label": "Clothes",                     "order": 8,  "prefixes": ["08-clothes"] },
+  "toys":       { "label": "Toys, music and play",        "order": 9,  "prefixes": ["09-toys"] },
+  "vehicles":   { "label": "Things that go",              "order": 10, "prefixes": ["10-vehicles"] },
+  "winter":     { "label": "Winter",                      "order": 11, "prefixes": ["11-winter", "20-winter"] },
+  "christmas":  { "label": "Christmas",                   "order": 12, "prefixes": ["21-christmas"] },
+  "people":     { "label": "People and other things",     "order": 13, "prefixes": ["12-people"] },
+  "body":       { "label": "My body",                     "order": 14, "prefixes": ["13-body"] },
+  "opposites":  { "label": "Opposites",                   "order": 15, "prefixes": ["14-opposites"] },
+  "counting":   { "label": "Counting shapes",             "order": 16, "prefixes": ["15-count"] },
+  "shapes":     { "label": "Shape hunt",                  "order": 17, "prefixes": ["16-hunt"] },
+  "feelings":   { "label": "Feelings faces",              "order": 18, "prefixes": ["17-feelings"] },
+  "kids-faces": { "label": "Kids' feelings faces",        "order": 19, "prefixes": ["17-kids"] },
+  "cues":       { "label": "Instruction cues",            "order": 20, "prefixes": ["18-cues"] },
+  "compare":    { "label": "Compare and finish",          "order": 21, "prefixes": ["19-compare"] }
+}

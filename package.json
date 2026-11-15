@@ -1,0 +1,14 @@
+{
+  "name": "sb-line-library",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Sunshine Brigade line-art library: centerline vector data for the worksheet builder",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "import": "node scripts/import.mjs"
+  },
+  "devDependencies": {
+    "pngjs": "^7.0.0"
+  }
+}

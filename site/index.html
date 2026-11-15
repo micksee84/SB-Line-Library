@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Line Library · Sunshine Brigade</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#f6f4ef; --card:#fff; --ink:#1f1d24; --muted:#6d6a73; --line:#e4e0d8; --accent:#f5a524; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:Nunito, system-ui, sans-serif; }
+  header { position:sticky; top:0; z-index:2; background:var(--card); border-bottom:1px solid var(--line); padding:12px 20px; display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+  header b { font-size:18px; } header .meta { color:var(--muted); font-size:13px; }
+  header input { margin-left:auto; border:1px solid var(--line); border-radius:999px; padding:7px 14px; font:inherit; min-width:220px; }
+  nav { display:flex; gap:6px; flex-wrap:wrap; padding:10px 20px 0; }
+  nav a { font-size:12.5px; font-weight:700; color:var(--ink); text-decoration:none; background:var(--card); border:1px solid var(--line); border-radius:999px; padding:3px 10px; }
+  section { padding:8px 20px 4px; }
+  h2 { font-size:15px; margin:18px 0 8px; } h2 span { color:var(--muted); font-weight:600; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(96px,1fr)); gap:8px; }
+  .tile { background:var(--card); border-radius:10px; padding:6px; cursor:pointer; border:2px solid transparent; position:relative; }
+  .tile:hover { border-color:var(--accent); }
+  .tile img { width:100%; aspect-ratio:1; display:block; }
+  .tile div { font-size:11px; color:var(--muted); text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .tile .f { position:absolute; top:4px; right:4px; width:9px; height:9px; border-radius:50%; background:#d9822b; }
+  dialog { border:0; border-radius:16px; padding:18px; width:min(560px,94vw); }
+  dialog::backdrop { background:rgba(30,25,20,.45); }
+  dialog canvas { width:100%; height:auto; border:1px solid var(--line); border-radius:12px; display:block; }
+  .chips { display:flex; gap:6px; flex-wrap:wrap; margin:10px 0; }
+  .chips button { border:1px solid var(--line); background:#fff; border-radius:999px; padding:5px 12px; font:inherit; font-weight:700; cursor:pointer; }
+  .chips button.on { background:var(--ink); color:#fff; border-color:var(--ink); }
+  .row { display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  .muted { color:var(--muted); font-size:13px; } code { background:#f1eee7; padding:1px 5px; border-radius:4px; font-size:12px; }
+  .x { border:0; background:none; font-size:22px; cursor:pointer; }
+</style>
+</head>
+<body>
+<header><b>Line Library</b><span class="meta" id="meta">Loading…</span><input id="q" type="search" placeholder="Search pictures"></header>
+<nav id="nav"></nav>
+<main id="main"></main>
+<dialog id="dlg">
+  <div class="row"><div><b id="dName"></b><div class="muted" id="dInfo"></div></div><button class="x" onclick="dlg.close()">×</button></div>
+  <div class="chips" id="dStyles"></div>
+  <canvas id="dCanvas" width="1000" height="1000"></canvas>
+  <p class="muted" id="dFile"></p>
+</dialog>
+<script src="engine/sb-line-trace.js"></script>
+<script src="engine/sb-line-render.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+let catalog, style = 'fineliner', current = null;
+fetch('catalog.json').then(r => r.json()).then(c => { catalog = c; draw(); });
+$('#q').oninput = draw;
+
+function draw() {
+  const q = $('#q').value.trim().toLowerCase();
+  $('#meta').textContent = `${catalog.count} pictures · ${catalog.categories.length} categories · v${catalog.version} · built ${catalog.generated.slice(0, 10)}`;
+  $('#nav').innerHTML = q ? '' : catalog.categories.map(c => `<a href="#${c.id}">${c.label}</a>`).join('');
+  const main = $('#main'); main.innerHTML = '';
+  for (const c of catalog.categories) {
+    const items = c.items.filter(i => !q || i.name.toLowerCase().includes(q) || i.tags.some(t => t.includes(q)) || c.label.toLowerCase().includes(q));
+    if (!items.length) continue;
+    const s = document.createElement('section'); s.id = c.id;
+    s.innerHTML = `<h2>${c.label} <span>${items.length}</span></h2><div class="grid"></div>`;
+    const g = s.querySelector('.grid');
+    for (const it of items) {
+      const t = document.createElement('div'); t.className = 'tile'; t.title = `${c.id}/${it.id}`;
+      t.innerHTML = `<img loading="lazy" alt=""><div></div>${it.flags ? '<span class="f" title="' + it.flags.join('; ') + '"></span>' : ''}`;
+      t.querySelector('img').src = it.thumb; t.querySelector('div').textContent = it.name;
+      t.onclick = () => open(c, it); g.appendChild(t);
+    }
+    main.appendChild(s);
+  }
+}
+
+async function open(c, it) {
+  current = await (await fetch(it.file)).json();
+  $('#dName').textContent = it.name;
+  $('#dInfo').textContent = `${c.label} · ${current.strokes.length} strokes${current.fills.length ? ' · solid fills' : ''}`;
+  $('#dFile').innerHTML = `<code>${it.file}</code>${it.flags ? ' · ' + it.flags.join('; ') : ''}`;
+  styles(); dlg.showModal(); render();
+}
+function styles() {
+  $('#dStyles').innerHTML = '';
+  for (const [k, v] of Object.entries(SBLineRender.STYLES)) {
+    const b = document.createElement('button'); b.textContent = v.label; b.className = k === style ? 'on' : '';
+    b.onclick = () => { style = k; styles(); render(); }; $('#dStyles').appendChild(b);
+  }
+}
+function render() {
+  const cv = $('#dCanvas'), ctx = cv.getContext('2d');
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cv.width, cv.height);
+  setTimeout(() => ctx.drawImage(SBLineRender.render(current, { size: cv.width, style, lineScale: 0.7 }), 0, 0), 0);
+}
+</script>
+</body>
+</html>
