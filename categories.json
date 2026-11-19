@@ -19,5 +19,6 @@
   "feelings":   { "label": "Feelings faces",              "order": 18, "prefixes": ["17-feelings"] },
   "kids-faces": { "label": "Kids' feelings faces",        "order": 19, "prefixes": ["17-kids"] },
   "cues":       { "label": "Instruction cues",            "order": 20, "prefixes": ["18-cues"] },
-  "compare":    { "label": "Compare and finish",          "order": 21, "prefixes": ["19-compare"] }
+  "compare":    { "label": "Compare and finish",          "order": 21, "prefixes": ["19-compare"] },
+  "planner":    { "label": "My day and packing",        "order": 22, "prefixes": ["22-planner"] }
 }
